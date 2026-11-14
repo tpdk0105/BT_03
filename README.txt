@@ -1,4 +1,4 @@
-             HƯỚNG DẪN CHẠY DỰ ÁN LoginSessionCookie (JPA / HIBERNATE)
+             HƯỚNG DẪN CHẠY DỰ ÁN Login - Hệ Thống ABC (JPA / HIBERNATE)
 
 1. YÊU CẦU MÔI TRƯỜNG:
    - JDK 11 trở lên
@@ -24,8 +24,10 @@
 
 4. IMPORT VÀ CHẠY DỰ ÁN TRÊN ECLIPSE / SPRING TOOL SUITE (STS):
    - Vào File -> Import... -> Maven -> Existing Maven Projects.
-   - Chọn thư mục "LoginSessionCookie" -> Bấm Finish.
+   - Chọn thư mục dự án (thư mục chứa pom.xml) -> Bấm Finish.
    - Chuột phải vào project -> Maven -> Update Project... (tích chọn Force Update) -> OK.
+   - Kiểm tra Context Root (nếu cần): Chuột phải project -> Properties -> Web Project Settings
+     -> đảm bảo Context root là "Login".
    - (Tuỳ chọn) Test cấu hình JPA:
      Mở file src/main/java/vn/iotstar/config/Test.java -> Chuột phải -> Run As -> Java Application
      để kiểm tra kết nối JPA, tự động sinh bảng [categories], [videos] và chèn dữ liệu mẫu.
@@ -38,10 +40,12 @@
      hệ thống sẽ tự động tạo thư mục nếu chưa tồn tại).
 
 6. ĐƯỜNG DẪN TRUY CẬP CHÍNH:
-   - Đăng nhập (Session / Cookie Remember Me): http://localhost:8080/LoginSessionCookie/login
-   - Đăng ký tài khoản mới                   : http://localhost:8080/LoginSessionCookie/register
-   - Quản lý Thể loại (Category CRUD - Admin): http://localhost:8080/LoginSessionCookie/admin/categories
-   - Quản lý Video (Video CRUD - Admin)      : http://localhost:8080/LoginSessionCookie/admin/videos
+   - Đăng nhập (Session / Cookie Remember Me): http://localhost:8080/Login/login
+   - Đăng ký tài khoản mới                   : http://localhost:8080/Login/register
+   - Quản lý Thể loại (Category CRUD - Admin): http://localhost:8080/Login/admin/categories
+     (Có kiểm tra và báo lỗi khi nhập trùng tên thể loại)
+   - Quản lý Video (Video CRUD - Admin)      : http://localhost:8080/Login/admin/videos
+     (Mã VideoId tự động sinh theo dạng v01, v02, ... không trùng lặp)
 
 7. DANH SÁCH TÀI KHOẢN MẪU:
    + Quản trị viên (Admin - Role 1):
