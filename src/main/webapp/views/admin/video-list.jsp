@@ -55,7 +55,9 @@
                                             <img height="80" width="120" src="${imgUrl}" class="rounded img-thumbnail" alt="poster"/>
                                         </c:if>
                                     </td>
-                                    <td class="text-start">${v.title}</td>
+                                    <td class="text-start">
+                                        <a href="<c:url value='/video/detail?id=${v.videoId}'/>" class="text-decoration-none fw-semibold">${v.title}</a>
+                                    </td>
                                     <td>${v.category.categoryname}</td>
                                     <td>${v.views}</td>
                                     <td>

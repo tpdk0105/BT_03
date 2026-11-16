@@ -16,5 +16,17 @@ public interface IVideoService {
 
 	List<Video> findAll();
 
+	List<Video> findLatest(int limit);
+
+	List<Video> findByUserId(int userId, int page, int pageSize);
+
+	long countByUserId(int userId);
+
+	List<Video> findAllActive(int page, int pageSize);
+
+	long countAllActive();
+
+	void increaseViews(String videoId);
+
 	String generateNextVideoId();
 }

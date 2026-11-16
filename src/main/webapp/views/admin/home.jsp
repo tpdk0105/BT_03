@@ -69,6 +69,9 @@
                                 <a href="${pageContext.request.contextPath}/admin/videos" class="btn btn-success fw-bold">
                                     <i class="bi bi-camera-video-fill me-1"></i>Quản lý Video
                                 </a>
+                                <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-dark fw-bold">
+                                    <i class="bi bi-people-fill me-1"></i>Phân quyền Manager
+                                </a>
                             </span>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger">
                                 <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất

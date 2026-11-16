@@ -47,6 +47,36 @@ public class VideoServiceImpl implements IVideoService {
 	}
 
 	@Override
+	public List<Video> findLatest(int limit) {
+		return videoDao.findLatest(limit);
+	}
+
+	@Override
+	public List<Video> findByUserId(int userId, int page, int pageSize) {
+		return videoDao.findByUserId(userId, page, pageSize);
+	}
+
+	@Override
+	public long countByUserId(int userId) {
+		return videoDao.countByUserId(userId);
+	}
+
+	@Override
+	public List<Video> findAllActive(int page, int pageSize) {
+		return videoDao.findAllActive(page, pageSize);
+	}
+
+	@Override
+	public long countAllActive() {
+		return videoDao.countAllActive();
+	}
+
+	@Override
+	public void increaseViews(String videoId) {
+		videoDao.increaseViews(videoId);
+	}
+
+	@Override
 	public String generateNextVideoId() {
 		List<Video> list = videoDao.findAll();
 		int max = 0;

@@ -32,7 +32,7 @@ public class LoginController extends HttpServlet {
                 if (Constant.COOKIE_REMEMBER.equals(cookie.getName())) {
                     UserService service = new UserServiceImpl();
                     User user = service.get(cookie.getValue());
-                    if (user != null) {
+                    if (user != null && user.getStatus() == 1) {
                         session = req.getSession(true);
                         session.setAttribute("account", user);
                         session.setAttribute("username", user.getUserName());
@@ -73,6 +73,14 @@ public class LoginController extends HttpServlet {
         User user = service.login(username, password);
 
         if (user != null) {
+            if (user.getStatus() == 0) {
+                HttpSession session = req.getSession(true);
+                session.setAttribute("pendingEmail", user.getEmail());
+                req.setAttribute("alert", "Tài khoản chưa được kích hoạt! Vui lòng nhập mã OTP tại trang xác thực.");
+                req.setAttribute("needVerify", true);
+                req.getRequestDispatcher(Constant.LOGIN).forward(req, resp);
+                return;
+            }
             HttpSession session = req.getSession(true);
             session.setAttribute("account", user);
             session.setAttribute("username", user.getUserName());

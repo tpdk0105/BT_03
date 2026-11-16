@@ -2,6 +2,8 @@ package vn.iotstar.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -46,6 +49,15 @@ public class User implements Serializable {
 
 	@Column(name = "createddate")
 	private Date createdDate;
+
+	@Column(name = "status", columnDefinition = "int not null default 1")
+	private int status = 1;
+
+	@Column(name = "code", columnDefinition = "nvarchar(20) null")
+	private String code;
+
+	@OneToMany(mappedBy = "user")
+	private List<Video> videos = new ArrayList<>();
 
 	public User() {
 	}
@@ -177,5 +189,29 @@ public class User implements Serializable {
 
 	public void setCreateddate(Date createddate) {
 		this.createdDate = createddate;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public List<Video> getVideos() {
+		return videos;
+	}
+
+	public void setVideos(List<Video> videos) {
+		this.videos = videos;
 	}
 }

@@ -48,6 +48,14 @@
                                 <input type="number" name="views" min="0" class="form-control" value="${video.views}">
                             </div>
                             <div class="mb-3">
+                                <label class="form-label fw-bold">Link video (YouTube hoặc .mp4):</label>
+                                <input type="text" name="videoUrl" class="form-control" value="${video.videoUrl}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Hoặc Upload file Video mới (.mp4 - Multipart):</label>
+                                <input type="file" name="videoFile" class="form-control" accept="video/*">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label fw-bold">Link poster:</label>
                                 <input type="text" name="poster" class="form-control" value="${video.poster}">
                             </div>

@@ -72,6 +72,13 @@ public class RegisterController extends HttpServlet {
             return;
         }
 
+        if (!email.matches("^[A-Za-z0-9._%+-]+@gmail\\.com$")) {
+            alertMsg = "Email không hợp lệ! Vui lòng nhập đúng cú pháp Gmail (ví dụ: tenban@gmail.com).";
+            req.setAttribute("alert", alertMsg);
+            req.getRequestDispatcher(Constant.REGISTER).forward(req, resp);
+            return;
+        }
+
         if (service.checkExistEmail(email)) {
             alertMsg = "Email đã tồn tại!";
             req.setAttribute("alert", alertMsg);
@@ -88,8 +95,16 @@ public class RegisterController extends HttpServlet {
 
         boolean isSuccess = service.register(username, password, email, fullname, phone);
         if (isSuccess) {
-            req.setAttribute("alertSuccess", "Đăng ký thành công! Vui lòng đăng nhập.");
-            req.getRequestDispatcher(Constant.LOGIN).forward(req, resp);
+            boolean mailSent = service.sendActivationOtp(email);
+            HttpSession session = req.getSession(true);
+            session.setAttribute("pendingEmail", email);
+            if (!mailSent) {
+                User created = service.getByEmail(email);
+                session.setAttribute("devOtpNotice", "Chế độ kiểm thử (chưa cấu hình SMTP Gmail trong Constant.java) - Mã OTP của bạn là: " + created.getCode());
+            } else {
+                session.removeAttribute("devOtpNotice");
+            }
+            resp.sendRedirect(req.getContextPath() + "/verify-otp");
         } else {
             alertMsg = "System error!";
             req.setAttribute("alert", alertMsg);

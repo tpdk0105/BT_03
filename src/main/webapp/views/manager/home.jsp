@@ -61,7 +61,15 @@
                             </tbody>
                         </table>
 
-                        <div class="text-end mt-4">
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <span>
+                                <a href="${pageContext.request.contextPath}/video" class="btn btn-info fw-bold">
+                                    <i class="bi bi-camera-video-fill me-1"></i>Quản lý Video của tôi
+                                </a>
+                                <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-primary">
+                                    <i class="bi bi-house me-1"></i>Trang Chủ (Top 10 Video)
+                                </a>
+                            </span>
                             <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger">
                                 <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
                             </a>

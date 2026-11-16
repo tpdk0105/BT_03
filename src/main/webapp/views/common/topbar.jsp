@@ -13,8 +13,25 @@
         <div class="collapse navbar-collapse" id="navContent">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="${pageContext.request.contextPath}/waiting">Trang Chủ</a>
+                    <a class="nav-link" href="${pageContext.request.contextPath}/home">Trang Chủ</a>
                 </li>
+                <c:if test="${sessionScope.account != null}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="${pageContext.request.contextPath}/video">
+                            ${(sessionScope.account.roleid == 1 || sessionScope.account.roleid == 2) ? 'Quản lý Video' : 'Tất cả Video'}
+                        </a>
+                    </li>
+                    <c:if test="${sessionScope.account.roleid == 1}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/admin/home">Quản trị</a>
+                        </li>
+                    </c:if>
+                    <c:if test="${sessionScope.account.roleid == 2}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${pageContext.request.contextPath}/manager/home">Manager</a>
+                        </li>
+                    </c:if>
+                </c:if>
             </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">

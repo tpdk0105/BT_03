@@ -31,12 +31,26 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </c:if>
+                        <c:if test="${needVerify}">
+                            <div class="alert alert-warning py-2 small">
+                                <a href="${pageContext.request.contextPath}/verify-otp" class="fw-bold text-decoration-none">
+                                    <i class="bi bi-envelope-check me-1"></i>Bấm vào đây để nhập mã OTP kích hoạt tài khoản
+                                </a>
+                            </div>
+                        </c:if>
 
                         <!-- Thông báo thành công -->
                         <c:if test="${alertSuccess != null}">
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 <i class="bi bi-check-circle-fill me-2"></i>${alertSuccess}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </c:if>
+                        <c:if test="${needVerify}">
+                            <div class="alert alert-warning py-2 small">
+                                <a href="${pageContext.request.contextPath}/verify-otp" class="fw-bold text-decoration-none">
+                                    <i class="bi bi-envelope-check me-1"></i>Bấm vào đây để nhập mã OTP kích hoạt tài khoản
+                                </a>
                             </div>
                         </c:if>
 
@@ -82,7 +96,7 @@
                                         Nhớ tôi
                                     </label>
                                 </div>
-                                <a href="#" class="text-decoration-none small text-muted">Quên mật khẩu?</a>
+                                <a href="${pageContext.request.contextPath}/forgot-password" class="text-decoration-none small text-primary fw-semibold">Quên mật khẩu?</a>
                             </div>
 
                             <!-- Nút đăng nhập -->

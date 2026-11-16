@@ -1,6 +1,7 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,17 @@ public class Video implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "CategoryId")
 	private Category category;
+
+	// bi-directional many-to-one association to User (1 User - N Videos)
+	@ManyToOne
+	@JoinColumn(name = "userId")
+	private User user;
+
+	@Column(name = "VideoUrl", columnDefinition = "nvarchar(500) null")
+	private String videoUrl;
+
+	@Column(name = "CreatedDate")
+	private Timestamp createdDate;
 
 	public Video() {
 	}
@@ -121,5 +133,29 @@ public class Video implements Serializable {
 
 	public void setCategories(Category category) {
 		this.category = category;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getVideoUrl() {
+		return videoUrl;
+	}
+
+	public void setVideoUrl(String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
+
+	public Timestamp getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
 	}
 }

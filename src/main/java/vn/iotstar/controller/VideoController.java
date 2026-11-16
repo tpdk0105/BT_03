@@ -1,8 +1,7 @@
 package vn.iotstar.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.sql.Timestamp;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -10,16 +9,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
+import jakarta.servlet.http.HttpSession;
 import vn.iotstar.entity.Category;
 import vn.iotstar.entity.Video;
+import vn.iotstar.model.User;
 import vn.iotstar.service.ICategoryService;
 import vn.iotstar.service.IVideoService;
 import vn.iotstar.service.impl.CategoryServiceImpl;
 import vn.iotstar.service.impl.VideoServiceImpl;
-import vn.iotstar.util.Constant;
+import vn.iotstar.util.UploadUtil;
 
-@MultipartConfig()
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+		maxFileSize = 1024 * 1024 * 50, // 50MB
+		maxRequestSize = 1024 * 1024 * 100) // 100MB
 @WebServlet(urlPatterns = { "/admin/videos", "/admin/video/add", "/admin/video/insert", "/admin/video/edit",
 		"/admin/video/update", "/admin/video/delete" })
 public class VideoController extends HttpServlet {
@@ -62,8 +64,38 @@ public class VideoController extends HttpServlet {
 			String videoId = videoService.generateNextVideoId();
 			Video video = new Video();
 			video.setVideoId(videoId);
+			video.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			fillFromForm(req, video);
-			video.setPoster(resolvePoster(req, null));
+
+			HttpSession session = req.getSession(false);
+			if (session != null && session.getAttribute("account") != null) {
+				User acc = (User) session.getAttribute("account");
+				vn.iotstar.entity.User owner = new vn.iotstar.entity.User();
+				owner.setId(acc.getId());
+				video.setUser(owner);
+			}
+
+			String posterSaved = UploadUtil.savePart(req.getPart("poster1"), req.getParameter("poster"));
+			video.setPoster(posterSaved);
+			String videoSaved = UploadUtil.savePart(req.getPart("videoFile"), req.getParameter("videoUrl"));
+			video.setVideoUrl(videoSaved);
+
+			if (videoSaved == null || videoSaved.trim().isEmpty()) {
+				req.setAttribute("error", "Bắt buộc phải nhập Link Video hoặc tải lên File Video!");
+				req.setAttribute("nextVideoId", videoId);
+				req.setAttribute("video", video);
+				req.setAttribute("listcate", cateService.findAll());
+				req.getRequestDispatcher("/views/admin/video-add.jsp").forward(req, resp);
+				return;
+			}
+			if (posterSaved == null || posterSaved.trim().isEmpty()) {
+				req.setAttribute("error", "Bắt buộc phải nhập Link Poster hoặc tải lên File Poster!");
+				req.setAttribute("nextVideoId", videoId);
+				req.setAttribute("video", video);
+				req.setAttribute("listcate", cateService.findAll());
+				req.getRequestDispatcher("/views/admin/video-add.jsp").forward(req, resp);
+				return;
+			}
 
 			if (!videoService.insert(video)) {
 				req.setAttribute("error", "Không thể khởi tạo mã video mới, vui lòng thử lại!");
@@ -77,8 +109,15 @@ public class VideoController extends HttpServlet {
 		} else if (url.contains("/admin/video/update")) {
 			Video video = videoService.findById(req.getParameter("videoId"));
 			if (video != null) {
+				String oldPoster = video.getPoster();
+				String oldVideoUrl = video.getVideoUrl();
 				fillFromForm(req, video);
-				video.setPoster(resolvePoster(req, video.getPoster()));
+
+				String posterSaved = UploadUtil.savePart(req.getPart("poster1"), req.getParameter("poster"));
+				video.setPoster(posterSaved != null ? posterSaved : oldPoster);
+				String videoSaved = UploadUtil.savePart(req.getPart("videoFile"), req.getParameter("videoUrl"));
+				video.setVideoUrl(videoSaved != null ? videoSaved : oldVideoUrl);
+
 				videoService.update(video);
 			}
 			resp.sendRedirect(req.getContextPath() + "/admin/videos");
@@ -99,26 +138,5 @@ public class VideoController extends HttpServlet {
 		} else {
 			video.setCategory(null);
 		}
-	}
-
-	private String resolvePoster(HttpServletRequest req, String old) throws IOException, ServletException {
-		String posterLink = req.getParameter("poster");
-		Part part = req.getPart("poster1");
-		if (part != null && part.getSize() > 0) {
-			File dir = new File(Constant.DIR);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
-			String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-			int index = filename.lastIndexOf(".");
-			String ext = index >= 0 ? filename.substring(index + 1) : "png";
-			String fname = System.currentTimeMillis() + "." + ext;
-			part.write(Constant.DIR + File.separator + fname);
-			return fname;
-		}
-		if (posterLink != null && !posterLink.trim().isEmpty()) {
-			return posterLink.trim();
-		}
-		return old;
 	}
 }

@@ -71,7 +71,9 @@
                                            class="form-control"
                                            id="email"
                                            name="email"
-                                           placeholder="Nhập Email"
+                                           placeholder="example@gmail.com"
+                                           pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+                                           title="Vui lòng nhập đúng định dạng Gmail (ví dụ: tenban@gmail.com)"
                                            value="${param.email}"
                                            required />
                                 </div>
